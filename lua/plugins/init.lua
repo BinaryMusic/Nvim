@@ -130,21 +130,23 @@ return {
   },
 
   -- nvim-dap-python for Python debugging
-  {
-    "mfussenegger/nvim-dap-python",
-    ft = "python",
-    dependencies = {
-      "mfussenegger/nvim-dap",
-      "rcarriga/nvim-dap-ui",
-      "nvim-neotest/nvim-nio",
-    },
-    config = function(_, opts)
-      local path = "~/.local/share/nvim/mason/packages/debugpy/venv/bin/python"
-      require("dap-python").setup(path)
-      require("core.utils").load_mappings("dap_python")
-    end,
+ {
+  "mfussenegger/nvim-dap-python",
+  ft = "python",
+  dependencies = {
+    "mfussenegger/nvim-dap",
+    "rcarriga/nvim-dap-ui",
+    "nvim-neotest/nvim-nio",
   },
-
+  config = function()
+    local path = "~/.local/share/nvim/mason/packages/debugpy/venv/bin/python"
+    require("dap-python").setup(path)
+    
+    -- Manually set keybindings (no core.utils dependency)
+    vim.keymap.set("n", "<leader>db", ":lua require('dap').toggle_breakpoint()<CR>")
+    vim.keymap.set("n", "<leader>dc", ":lua require('dap').continue()<CR>")
+  end,
+}, 
   -- LSP configuration
   {
     "neovim/nvim-lspconfig",
@@ -152,4 +154,49 @@ return {
       require "configs.lspconfig"
     end,
   },
-}
+  -- here is configs for jupyter like environment for python 
+{
+'Vigemus/iron.nvim',
+ft = { "python" }, -- Load only for these file types
+config = function()
+local iron = require("iron.core")
+
+iron.setup({
+  config = {
+    scratch_repl = true, -- Allow discarding REPLs
+    repl_definition = {
+      python = { command = { "ipython" } }
+    },
+    repl_open_cmd = require("iron.view").right(vim.o.columns * 0.4), -- Dynamic width
+  },
+  keymaps = {
+    send_motion = "<space>rc",
+    visual_send = "<space>rc",
+    send_file = "<space>rf",
+    send_line = "<space>rl",
+    send_mark = "<space>rm",
+    mark_motion = "<space>rmc",
+    mark_visual = "<space>rmc",
+    remove_mark = "<space>rmd",
+    cr = "<space>r<cr>",
+    interrupt = "<space>r<space>",
+    exit = "<space>rq",
+    clear = "<space>rx",
+    send_paragraph = "<space>rp", -- Custom keymap to send a paragraph
+  },
+  highlight = {
+    italic = true,
+    fg = "#A9A1E1", -- Optional custom foreground
+    bg = "#2E3440", -- Optional custom background
+  },
+  ignore_blank_lines = true,
+})
+
+-- Additional keymaps for REPL management
+vim.keymap.set("n", "<space>rs", "<cmd>IronRepl<cr>")
+vim.keymap.set("n", "<space>rr", "<cmd>IronRestart<cr>")
+vim.keymap.set("n", "<space>rF", "<cmd>IronFocus<cr>")
+vim.keymap.set("n", "<space>rh", "<cmd>IronHide<cr>")
+vim.keymap.set("n", "<space>rc", "<cmd>IronClear<cr>") -- Clear REPL
+end,
+},}
