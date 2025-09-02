@@ -1,19 +1,14 @@
 return {
+  -- Formatter
   {
     "stevearc/conform.nvim",
-    event = 'BufWritePre', -- format on save
+    event = 'BufWritePre',
     config = function()
       require("conform").setup({
         formatters_by_ft = {
-          -- C-family
-          c = { "clang_format" },
+          c   = { "clang_format" },
           cpp = { "clang_format" },
-          
-          -- Python
-          python = { "black", "ruff" },
-          
-          -- Fortran
-          fortran = { "fprettify" },
+          asm = { "asmfmt" }, -- optional, if you install asmfmt
         },
         format_on_save = {
           timeout_ms = 500,
@@ -22,49 +17,25 @@ return {
       })
     end,
   },
-{
+
+  -- Icons
+  {
     "nvim-tree/nvim-web-devicons",
-    lazy = true,  -- Load when needed (recommended)
-    opts = {},    -- Default configuration (or customize)
+    lazy = true,
+    opts = {},
     config = function(_, opts)
-      require("nvim-web-devicons").setup(opts)  -- Explicit setup call
+      require("nvim-web-devicons").setup(opts)
     end,
-  },  
+  },
+
+  -- Async path completion
   {
     "FelipeLema/cmp-async-path",
     dev = false,
     url = "https://github.com/FelipeLema/cmp-async-path.git"
   },
-  
-  -- VimTeX plugin for LaTeX support
-  {
-    "lervag/vimtex",
-    ft = "tex",
-    config = function()
-      vim.g.vimtex_compiler_method = "latexmk"
-      vim.g.tex_flavor = "latex"
-      vim.g.vimtex_view_general_viewer = 'zathura'
-      vim.g.vimtex_view_method = 'general'
-      vim.g.vimtex_mappings_enabled = false
-      vim.g.vimtex_indent_enabled = false
-      vim.g.tex_indent_items = false
-      vim.g.tex_indent_brace = false
-      vim.g.vimtex_quickfix_mode = 0
-      vim.g.vimtex_log_ignore = {
-        'Underfull',
-        'Overfull',
-        'specifier changed to',
-        'Token not allowed in a PDF string',
-      }
-    end,
-  },
 
-  -- Dependency for nvim-dap-ui
-  {
-    "nvim-neotest/nvim-nio",
-  },
-
-  -- nvim-dap and nvim-dap-ui for debugging
+  -- Debugging UI
   {
     "rcarriga/nvim-dap-ui",
     dependencies = "mfussenegger/nvim-dap",
@@ -81,6 +52,7 @@ return {
     end
   },
 
+  -- Debugging core
   {
     "mfussenegger/nvim-dap",
     config = function()
@@ -99,9 +71,7 @@ return {
       "williamboman/mason.nvim",
       "mfussenegger/nvim-dap",
     },
-    opts = {
-      handlers = {}
-    },
+    opts = { handlers = {} },
   },
 
   -- Mason configuration
@@ -114,39 +84,13 @@ return {
         "clang-format",
         "codelldb",
         "cpplint",
-        
-        -- Python tools
-        "black",
-        "debugpy",
-        "mypy",
-        "ruff",
-        "pyright",
-        
-        -- Fortran tools
-        "fortls",
-        "fprettify",
+
+        -- Assembly tools
+        "asm-lsp",
       },
     },
   },
 
-  -- nvim-dap-python for Python debugging
- {
-  "mfussenegger/nvim-dap-python",
-  ft = "python",
-  dependencies = {
-    "mfussenegger/nvim-dap",
-    "rcarriga/nvim-dap-ui",
-    "nvim-neotest/nvim-nio",
-  },
-  config = function()
-    local path = "~/.local/share/nvim/mason/packages/debugpy/venv/bin/python"
-    require("dap-python").setup(path)
-    
-    -- Manually set keybindings (no core.utils dependency)
-    vim.keymap.set("n", "<leader>db", ":lua require('dap').toggle_breakpoint()<CR>")
-    vim.keymap.set("n", "<leader>dc", ":lua require('dap').continue()<CR>")
-  end,
-}, 
   -- LSP configuration
   {
     "neovim/nvim-lspconfig",
@@ -154,49 +98,33 @@ return {
       require "configs.lspconfig"
     end,
   },
-  -- here is configs for jupyter like environment for python 
-{
-'Vigemus/iron.nvim',
-ft = { "python" }, -- Load only for these file types
-config = function()
-local iron = require("iron.core")
 
-iron.setup({
-  config = {
-    scratch_repl = true, -- Allow discarding REPLs
-    repl_definition = {
-      python = { command = { "ipython" } }
-    },
-    repl_open_cmd = require("iron.view").right(vim.o.columns * 0.4), -- Dynamic width
+  -- Assembly syntax highlighting
+  {
+    "Shirk/vim-gas",
+    ft = { "asm", "s", "S" }, -- GNU Assembly
   },
-  keymaps = {
-    send_motion = "<space>rc",
-    visual_send = "<space>rc",
-    send_file = "<space>rf",
-    send_line = "<space>rl",
-    send_mark = "<space>rm",
-    mark_motion = "<space>rmc",
-    mark_visual = "<space>rmc",
-    remove_mark = "<space>rmd",
-    cr = "<space>r<cr>",
-    interrupt = "<space>r<space>",
-    exit = "<space>rq",
-    clear = "<space>rx",
-    send_paragraph = "<space>rp", -- Custom keymap to send a paragraph
-  },
-  highlight = {
-    italic = true,
-    fg = "#A9A1E1", -- Optional custom foreground
-    bg = "#2E3440", -- Optional custom background
-  },
-  ignore_blank_lines = true,
-})
 
--- Additional keymaps for REPL management
-vim.keymap.set("n", "<space>rs", "<cmd>IronRepl<cr>")
-vim.keymap.set("n", "<space>rr", "<cmd>IronRestart<cr>")
-vim.keymap.set("n", "<space>rF", "<cmd>IronFocus<cr>")
-vim.keymap.set("n", "<space>rh", "<cmd>IronHide<cr>")
-vim.keymap.set("n", "<space>rc", "<cmd>IronClear<cr>") -- Clear REPL
-end,
-},}
+  -- Assembler linting (optional)
+  {
+    "dense-analysis/ale",
+    ft = { "asm" },
+    config = function()
+      vim.g.ale_linters = {
+        asm = { "gcc" }, -- use gcc for assembly linting
+      }
+    end,
+  },
+
+  -- GDB frontend
+  {
+    "sakhnik/nvim-gdb",
+    ft = { "c", "cpp", "asm" },
+    build = ":!./install.sh",
+    config = function()
+      vim.g.nvimgdb_use_cmake_to_find_executables = 0
+      vim.g.nvimgdb_disable_start_keymaps = 1
+    end,
+  },
+}
+

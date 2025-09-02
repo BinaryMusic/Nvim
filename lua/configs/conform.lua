@@ -5,10 +5,7 @@ local options = {
     c       = { "clang_format" },
     cpp     = { "clang_format" },
     h       = { "clang_format" },
-    python  = { "black" },
-    fortran = { "fprettify" },
-    f90     = { "fprettify" },
-    f95     = { "fprettify" },
+    asm = { "asmfmt" }, 
   },
 
   -- Format on save
