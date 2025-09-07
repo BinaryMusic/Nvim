@@ -36,29 +36,53 @@ return {
     url = "https://github.com/FelipeLema/cmp-async-path.git"
   },
   
-  -- VimTeX plugin for LaTeX support
-  {
-    "lervag/vimtex",
-    ft = "tex",
-    config = function()
-      vim.g.vimtex_compiler_method = "latexmk"
-      vim.g.tex_flavor = "latex"
-      vim.g.vimtex_view_general_viewer = 'zathura'
-      vim.g.vimtex_view_method = 'general'
-      vim.g.vimtex_mappings_enabled = false
-      vim.g.vimtex_indent_enabled = false
-      vim.g.tex_indent_items = false
-      vim.g.tex_indent_brace = false
-      vim.g.vimtex_quickfix_mode = 0
-      vim.g.vimtex_log_ignore = {
-        'Underfull',
-        'Overfull',
-        'specifier changed to',
-        'Token not allowed in a PDF string',
-      }
-    end,
-  },
+ -- VimTeX plugin for LaTeX support
+{
+  "lervag/vimtex",
+  ft = "tex",
+  config = function()
+    -- Compiler settings
+    vim.g.vimtex_compiler_method = "latexmk"
+    vim.g.vimtex_compiler_latexmk = {
+      build_dir = "",
+      callback = 1,
+      continuous = 1, -- auto compile on save
+      executable = "latexmk",
+      options = {
+        "-pdf",
+        "-interaction=nonstopmode",
+        "-synctex=1",
+      },
+    }
 
+    -- Viewer settings
+    vim.g.tex_flavor = "latex"
+    vim.g.vimtex_view_general_viewer = "zathura"
+    vim.g.vimtex_view_method = "zathura"
+
+    -- Disable extras
+    vim.g.vimtex_mappings_enabled = false
+    vim.g.vimtex_indent_enabled = false
+    vim.g.tex_indent_items = false
+    vim.g.tex_indent_brace = false
+    vim.g.vimtex_quickfix_mode = 0
+
+    -- Ignore common warnings
+    vim.g.vimtex_log_ignore = {
+      "Underfull",
+      "Overfull",
+      "specifier changed to",
+      "Token not allowed in a PDF string",
+    }
+
+    -- ✅ Custom keymaps for compilation
+    vim.keymap.set("n", "<leader>ll", "<cmd>VimtexCompile<CR>", { desc = "Start LaTeX Compilation" })
+    vim.keymap.set("n", "<leader>lc", "<cmd>VimtexClean<CR>",   { desc = "Clean Aux Files" })
+    vim.keymap.set("n", "<leader>lv", "<cmd>VimtexView<CR>",    { desc = "Open PDF Viewer" })
+    vim.keymap.set("n", "<leader>lk", "<cmd>VimtexStop<CR>",    { desc = "Stop Compilation" })
+    vim.keymap.set("n", "<leader>lr", "<cmd>VimtexReload<CR>",  { desc = "Reload LaTeX File" })
+  end,
+},
   -- Dependency for nvim-dap-ui
   {
     "nvim-neotest/nvim-nio",
