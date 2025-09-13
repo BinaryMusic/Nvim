@@ -127,7 +127,7 @@ return {
     end,
   },
 
- -- Markdown file preview 
+ -- Markdown plugin 
    {
   {
     "MeanderingProgrammer/render-markdown.nvim",
