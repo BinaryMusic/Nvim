@@ -225,7 +225,7 @@ vim.keymap.set("n", "<space>rc", "<cmd>IronClear<cr>") -- Clear REPL
 end,
 },
   -- markdown preview 
-  return {
+   {
   {
     "MeanderingProgrammer/render-markdown.nvim",
     ft = { "markdown" },
