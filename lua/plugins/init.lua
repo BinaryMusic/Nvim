@@ -223,4 +223,20 @@ vim.keymap.set("n", "<space>rF", "<cmd>IronFocus<cr>")
 vim.keymap.set("n", "<space>rh", "<cmd>IronHide<cr>")
 vim.keymap.set("n", "<space>rc", "<cmd>IronClear<cr>") -- Clear REPL
 end,
-},}
+},
+  -- markdown preview 
+  return {
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = { "markdown" },
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require("render-markdown").setup({
+        render_modes = { "n" }, -- render in normal mode only
+      })
+    end,
+  },
+}
+
+
+}
