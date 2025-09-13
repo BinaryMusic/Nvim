@@ -126,5 +126,21 @@ return {
       vim.g.nvimgdb_disable_start_keymaps = 1
     end,
   },
+
+ -- Markdown file preview 
+   {
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = { "markdown" },
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require("render-markdown").setup({
+        render_modes = { "n" }, -- render in normal mode only
+      })
+    end,
+  },
+}
+
+
 }
 
