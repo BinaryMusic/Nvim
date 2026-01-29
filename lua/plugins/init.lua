@@ -157,29 +157,7 @@ return {
   },
 },
 
-  williamboman/mason.nvim",
-  pts = {
-   ensure_installed = {
-     -- C-family tools
-     "clangd",
-     "clang-format",
-     "codelldb",
-     "cpplint",
-     
-     -- Python tools
-     "black",
-     "debugpy",
-     "mypy",
-     "ruff",
-     "pyright",
-     
-     -- Fortran tools
-     "fortls",
-     "fprettify",
-   },
-  ,
-  
-
+ 
   -- nvim-dap-python for Python debugging
  {
   "mfussenegger/nvim-dap-python",
