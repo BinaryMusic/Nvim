@@ -130,28 +130,55 @@ return {
 
   -- Mason configuration
   {
-    "williamboman/mason.nvim",
-    opts = {
-      ensure_installed = {
-        -- C-family tools
-        "clangd",
-        "clang-format",
-        "codelldb",
-        "cpplint",
-        
-        -- Python tools
-        "black",
-        "debugpy",
-        "mypy",
-        "ruff",
-        "pyright",
-        
-        -- Fortran tools
-        "fortls",
-        "fprettify",
-      },
+  "WhoIsSethDaniel/mason-tool-installer.nvim",
+  event = "VeryLazy",
+  dependencies = { "williamboman/mason.nvim" },
+  opts = {
+    ensure_installed = {
+      -- C / C++
+      "clangd",
+      "clang-format",
+      "codelldb",
+      "cpplint",
+
+      -- Python
+      "black",
+      "debugpy",
+      "mypy",
+      "ruff",
+      "pyright",
+
+      -- Fortran
+      "fortls",
+      "fprettify",
     },
+    auto_update = false,
+    run_on_start = true,
   },
+},
+
+  williamboman/mason.nvim",
+  pts = {
+   ensure_installed = {
+     -- C-family tools
+     "clangd",
+     "clang-format",
+     "codelldb",
+     "cpplint",
+     
+     -- Python tools
+     "black",
+     "debugpy",
+     "mypy",
+     "ruff",
+     "pyright",
+     
+     -- Fortran tools
+     "fortls",
+     "fprettify",
+   },
+  ,
+  
 
   -- nvim-dap-python for Python debugging
  {
