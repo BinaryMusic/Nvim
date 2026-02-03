@@ -1,14 +1,15 @@
 return {
+
   -- Formatter
   {
     "stevearc/conform.nvim",
-    event = 'BufWritePre',
+    event = "BufWritePre",
     config = function()
       require("conform").setup({
         formatters_by_ft = {
           c   = { "clang_format" },
           cpp = { "clang_format" },
-          asm = { "asmfmt" }, -- optional, if you install asmfmt
+          asm = { "asmfmt" },
         },
         format_on_save = {
           timeout_ms = 500,
@@ -31,25 +32,30 @@ return {
   -- Async path completion
   {
     "FelipeLema/cmp-async-path",
-    dev = false,
-    url = "https://github.com/FelipeLema/cmp-async-path.git"
+    url = "https://github.com/FelipeLema/cmp-async-path.git",
   },
 
   -- Debugging UI
   {
     "rcarriga/nvim-dap-ui",
-    dependencies = "mfussenegger/nvim-dap",
+    dependencies = { "mfussenegger/nvim-dap" },
     config = function()
       local dap = require("dap")
       local dapui = require("dapui")
+
       dapui.setup()
 
       dap.listeners.after.event_initialized["dapui_config"] = function()
         dapui.open()
       end
 
-      vim.api.nvim_set_keymap('n', 'e', '<Cmd>lua require("dapui").close()<CR>', { noremap = true, silent = true })
-    end
+      vim.keymap.set(
+        "n",
+        "e",
+        function() dapui.close() end,
+        { noremap = true, silent = true, desc = "Close DAP UI" }
+      )
+    end,
   },
 
   -- Debugging core
@@ -60,7 +66,7 @@ return {
       vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
       vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Continue Debugging" })
       vim.keymap.set("n", "<leader>ds", dap.step_over, { desc = "Step Over" })
-    end
+    end,
   },
 
   -- Mason integration for dap tools
@@ -71,7 +77,9 @@ return {
       "williamboman/mason.nvim",
       "mfussenegger/nvim-dap",
     },
-    opts = { handlers = {} },
+    opts = {
+      handlers = {},
+    },
   },
 
   -- Mason configuration
@@ -79,13 +87,13 @@ return {
     "williamboman/mason.nvim",
     opts = {
       ensure_installed = {
-        -- C-family tools
+        -- C / C++
         "clangd",
         "clang-format",
         "codelldb",
         "cpplint",
 
-        -- Assembly tools
+        -- Assembly
         "asm-lsp",
       },
     },
@@ -95,23 +103,23 @@ return {
   {
     "neovim/nvim-lspconfig",
     config = function()
-      require "configs.lspconfig"
+      require("configs.lspconfig")
     end,
   },
 
   -- Assembly syntax highlighting
   {
     "Shirk/vim-gas",
-    ft = { "asm", "s", "S" }, -- GNU Assembly
+    ft = { "asm", "s", "S" },
   },
 
-  -- Assembler linting (optional)
+  -- Assembly linting
   {
     "dense-analysis/ale",
     ft = { "asm" },
     config = function()
       vim.g.ale_linters = {
-        asm = { "gcc" }, -- use gcc for assembly linting
+        asm = { "gcc" },
       }
     end,
   },
@@ -127,20 +135,17 @@ return {
     end,
   },
 
- -- Markdown plugin 
-   {
+  -- Markdown rendering (inline, NOT browser preview)
   {
     "MeanderingProgrammer/render-markdown.nvim",
     ft = { "markdown" },
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     config = function()
       require("render-markdown").setup({
-        render_modes = { "n" }, -- render in normal mode only
+        render_modes = { "n" }, -- render only in normal mode
       })
     end,
   },
-}
-
 
 }
 
